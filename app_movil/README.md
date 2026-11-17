@@ -41,6 +41,11 @@ cable USB: no hace falta conocer la IP del PC ni abrir el firewall.
 
 > Si desconectas el cable, vuelve a ejecutar `adb reverse tcp:8080 tcp:8080` al reconectar.
 
+> **Error `Unable to delete directory ... mergeDebugAssets`** (proyecto dentro de OneDrive):
+> OneDrive bloquea los archivos de `build/` mientras Gradle compila. `correr_en_celular.ps1` lo
+> evita creando `build/` como enlace a `%LOCALAPPDATA%\urbansync_build` (fuera de OneDrive).
+> Si vuelve a pasar: `cd android; .\gradlew --stop; cd ..` y ejecutar de nuevo el script.
+
 ## Generar el APK
 
 ```powershell

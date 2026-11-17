@@ -6,6 +6,18 @@ param([switch]$Apk)
 $ErrorActionPreference = 'Stop'
 Set-Location $PSScriptRoot
 
+# El repo está dentro de OneDrive: si OneDrive sincroniza la carpeta build mientras Gradle
+# compila, bloquea archivos ("Unable to delete directory ... mergeDebugAssets").
+# Solución: build/ es un enlace (junction) a una carpeta FUERA de OneDrive.
+$destinoBuild = Join-Path $env:LOCALAPPDATA 'urbansync_build'
+$build = Get-Item build -ErrorAction SilentlyContinue
+if (-not $build -or $build.LinkType -ne 'Junction') {
+    Write-Host "Preparando build/ fuera de OneDrive ($destinoBuild) ..." -ForegroundColor Cyan
+    if ($build) { Remove-Item -Recurse -Force build }
+    New-Item -ItemType Directory -Force $destinoBuild | Out-Null
+    cmd /c mklink /J build "$destinoBuild" | Out-Null
+}
+
 Write-Host "1/4 Verificando el backend en http://localhost:8080 ..." -ForegroundColor Cyan
 try {
     $salud = Invoke-RestMethod -Uri 'http://localhost:8080/health' -TimeoutSec 5
