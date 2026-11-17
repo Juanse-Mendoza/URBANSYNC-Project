@@ -1,0 +1,312 @@
+
+         /\      Grafana   /‾‾/  
+    /\  /  \     |\  __   /  /   
+   /  \/    \    | |/ /  /   ‾‾\ 
+  /          \   |   (  |  (‾)  |
+ / __________ \  |_|\_\  \_____/ 
+
+     execution: local
+        script: -
+        output: -
+
+     scenarios: (100.00%) 1 scenario, 50 max VUs, 1m30s max duration (incl. graceful stop):
+              * mapa: 50 looping VUs for 1m0s (gracefulStop: 30s)
+
+
+running (0m01.0s), 50/50 VUs, 0 complete and 0 interrupted iterations
+mapa   [   1% ] 50 VUs  0m00.9s/1m0s
+
+running (0m02.0s), 50/50 VUs, 39 complete and 0 interrupted iterations
+mapa   [   3% ] 50 VUs  0m01.9s/1m0s
+
+running (0m03.0s), 50/50 VUs, 83 complete and 0 interrupted iterations
+mapa   [   5% ] 50 VUs  0m02.9s/1m0s
+
+running (0m04.0s), 50/50 VUs, 126 complete and 0 interrupted iterations
+mapa   [   6% ] 50 VUs  0m03.9s/1m0s
+
+running (0m05.0s), 50/50 VUs, 168 complete and 0 interrupted iterations
+mapa   [   8% ] 50 VUs  0m04.9s/1m0s
+
+running (0m06.0s), 50/50 VUs, 215 complete and 0 interrupted iterations
+mapa   [  10% ] 50 VUs  0m05.9s/1m0s
+
+running (0m07.0s), 50/50 VUs, 263 complete and 0 interrupted iterations
+mapa   [  11% ] 50 VUs  0m06.9s/1m0s
+
+running (0m08.0s), 50/50 VUs, 313 complete and 0 interrupted iterations
+mapa   [  13% ] 50 VUs  0m07.9s/1m0s
+
+running (0m09.0s), 50/50 VUs, 363 complete and 0 interrupted iterations
+mapa   [  15% ] 50 VUs  0m08.9s/1m0s
+
+running (0m10.0s), 50/50 VUs, 406 complete and 0 interrupted iterations
+mapa   [  16% ] 50 VUs  0m09.9s/1m0s
+
+running (0m11.0s), 50/50 VUs, 449 complete and 0 interrupted iterations
+mapa   [  18% ] 50 VUs  0m10.9s/1m0s
+
+running (0m12.0s), 50/50 VUs, 494 complete and 0 interrupted iterations
+mapa   [  20% ] 50 VUs  0m11.9s/1m0s
+
+running (0m13.0s), 50/50 VUs, 539 complete and 0 interrupted iterations
+mapa   [  21% ] 50 VUs  0m12.9s/1m0s
+
+running (0m14.0s), 50/50 VUs, 588 complete and 0 interrupted iterations
+mapa   [  23% ] 50 VUs  0m13.9s/1m0s
+
+running (0m15.0s), 50/50 VUs, 637 complete and 0 interrupted iterations
+mapa   [  25% ] 50 VUs  0m14.9s/1m0s
+
+running (0m16.0s), 50/50 VUs, 686 complete and 0 interrupted iterations
+mapa   [  26% ] 50 VUs  0m15.9s/1m0s
+
+running (0m17.0s), 50/50 VUs, 736 complete and 0 interrupted iterations
+mapa   [  28% ] 50 VUs  0m16.9s/1m0s
+
+running (0m18.0s), 50/50 VUs, 779 complete and 0 interrupted iterations
+mapa   [  30% ] 50 VUs  0m17.9s/1m0s
+
+running (0m19.0s), 50/50 VUs, 822 complete and 0 interrupted iterations
+mapa   [  31% ] 50 VUs  0m18.9s/1m0s
+
+running (0m20.0s), 50/50 VUs, 857 complete and 0 interrupted iterations
+mapa   [  33% ] 50 VUs  0m19.9s/1m0s
+
+running (0m21.0s), 50/50 VUs, 881 complete and 0 interrupted iterations
+mapa   [  35% ] 50 VUs  0m20.9s/1m0s
+
+running (0m22.0s), 50/50 VUs, 901 complete and 0 interrupted iterations
+mapa   [  36% ] 50 VUs  0m21.9s/1m0s
+
+running (0m23.0s), 50/50 VUs, 918 complete and 0 interrupted iterations
+mapa   [  38% ] 50 VUs  0m22.9s/1m0s
+
+running (0m24.0s), 50/50 VUs, 935 complete and 0 interrupted iterations
+mapa   [  40% ] 50 VUs  0m23.9s/1m0s
+
+running (0m25.0s), 50/50 VUs, 952 complete and 0 interrupted iterations
+mapa   [  41% ] 50 VUs  0m24.9s/1m0s
+
+running (0m26.0s), 50/50 VUs, 969 complete and 0 interrupted iterations
+mapa   [  43% ] 50 VUs  0m25.9s/1m0s
+
+running (0m27.0s), 50/50 VUs, 986 complete and 0 interrupted iterations
+mapa   [  45% ] 50 VUs  0m26.9s/1m0s
+
+running (0m28.0s), 50/50 VUs, 996 complete and 0 interrupted iterations
+mapa   [  46% ] 50 VUs  0m27.9s/1m0s
+
+running (0m29.0s), 50/50 VUs, 1006 complete and 0 interrupted iterations
+mapa   [  48% ] 50 VUs  0m28.9s/1m0s
+
+running (0m30.0s), 50/50 VUs, 1015 complete and 0 interrupted iterations
+mapa   [  50% ] 50 VUs  0m29.9s/1m0s
+
+running (0m31.0s), 50/50 VUs, 1028 complete and 0 interrupted iterations
+mapa   [  51% ] 50 VUs  0m30.9s/1m0s
+
+running (0m32.0s), 50/50 VUs, 1049 complete and 0 interrupted iterations
+mapa   [  53% ] 50 VUs  0m31.9s/1m0s
+
+running (0m33.0s), 50/50 VUs, 1064 complete and 0 interrupted iterations
+mapa   [  55% ] 50 VUs  0m32.9s/1m0s
+
+running (0m34.0s), 50/50 VUs, 1078 complete and 0 interrupted iterations
+mapa   [  56% ] 50 VUs  0m33.9s/1m0s
+
+running (0m35.0s), 50/50 VUs, 1086 complete and 0 interrupted iterations
+mapa   [  58% ] 50 VUs  0m34.9s/1m0s
+
+running (0m36.0s), 50/50 VUs, 1098 complete and 0 interrupted iterations
+mapa   [  60% ] 50 VUs  0m35.9s/1m0s
+
+running (0m37.0s), 50/50 VUs, 1109 complete and 0 interrupted iterations
+mapa   [  61% ] 50 VUs  0m36.9s/1m0s
+
+running (0m38.0s), 50/50 VUs, 1119 complete and 0 interrupted iterations
+mapa   [  63% ] 50 VUs  0m37.9s/1m0s
+
+running (0m39.0s), 50/50 VUs, 1129 complete and 0 interrupted iterations
+mapa   [  65% ] 50 VUs  0m38.9s/1m0s
+
+running (0m40.0s), 50/50 VUs, 1139 complete and 0 interrupted iterations
+mapa   [  66% ] 50 VUs  0m39.9s/1m0s
+
+running (0m41.0s), 50/50 VUs, 1155 complete and 0 interrupted iterations
+mapa   [  68% ] 50 VUs  0m40.9s/1m0s
+
+running (0m42.0s), 50/50 VUs, 1176 complete and 0 interrupted iterations
+mapa   [  70% ] 50 VUs  0m41.9s/1m0s
+
+running (0m43.0s), 50/50 VUs, 1197 complete and 0 interrupted iterations
+mapa   [  71% ] 50 VUs  0m42.9s/1m0s
+
+running (0m44.0s), 50/50 VUs, 1218 complete and 0 interrupted iterations
+mapa   [  73% ] 50 VUs  0m43.9s/1m0s
+
+running (0m45.0s), 50/50 VUs, 1237 complete and 0 interrupted iterations
+mapa   [  75% ] 50 VUs  0m44.9s/1m0s
+
+running (0m46.0s), 50/50 VUs, 1258 complete and 0 interrupted iterations
+mapa   [  76% ] 50 VUs  0m45.9s/1m0s
+
+running (0m47.0s), 50/50 VUs, 1274 complete and 0 interrupted iterations
+mapa   [  78% ] 50 VUs  0m46.9s/1m0s
+
+running (0m48.0s), 50/50 VUs, 1299 complete and 0 interrupted iterations
+mapa   [  80% ] 50 VUs  0m47.9s/1m0s
+
+running (0m49.0s), 50/50 VUs, 1323 complete and 0 interrupted iterations
+mapa   [  81% ] 50 VUs  0m48.9s/1m0s
+
+running (0m50.0s), 50/50 VUs, 1348 complete and 0 interrupted iterations
+mapa   [  83% ] 50 VUs  0m49.9s/1m0s
+
+running (0m51.0s), 50/50 VUs, 1374 complete and 0 interrupted iterations
+mapa   [  85% ] 50 VUs  0m50.9s/1m0s
+
+running (0m52.0s), 50/50 VUs, 1399 complete and 0 interrupted iterations
+mapa   [  86% ] 50 VUs  0m51.9s/1m0s
+
+running (0m53.0s), 50/50 VUs, 1425 complete and 0 interrupted iterations
+mapa   [  88% ] 50 VUs  0m52.9s/1m0s
+
+running (0m54.0s), 50/50 VUs, 1451 complete and 0 interrupted iterations
+mapa   [  90% ] 50 VUs  0m53.9s/1m0s
+
+running (0m55.0s), 50/50 VUs, 1477 complete and 0 interrupted iterations
+mapa   [  91% ] 50 VUs  0m54.9s/1m0s
+
+running (0m56.0s), 50/50 VUs, 1501 complete and 0 interrupted iterations
+mapa   [  93% ] 50 VUs  0m55.9s/1m0s
+
+running (0m57.0s), 50/50 VUs, 1525 complete and 0 interrupted iterations
+mapa   [  95% ] 50 VUs  0m56.9s/1m0s
+
+running (0m58.0s), 50/50 VUs, 1554 complete and 0 interrupted iterations
+mapa   [  96% ] 50 VUs  0m57.9s/1m0s
+
+running (0m59.0s), 50/50 VUs, 1576 complete and 0 interrupted iterations
+mapa   [  98% ] 50 VUs  0m58.9s/1m0s
+
+running (1m00.0s), 50/50 VUs, 1597 complete and 0 interrupted iterations
+mapa   [ 100% ] 50 VUs  0m59.9s/1m0s
+
+running (1m01.0s), 33/50 VUs, 1617 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m02.0s), 27/50 VUs, 1623 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m03.0s), 21/50 VUs, 1629 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m04.0s), 19/50 VUs, 1631 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m05.0s), 17/50 VUs, 1633 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m06.0s), 17/50 VUs, 1633 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m07.0s), 16/50 VUs, 1634 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m08.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m09.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m10.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m11.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m12.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m13.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m14.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m15.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m16.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m17.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m18.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m19.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m20.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m21.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m22.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m23.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m24.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m25.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m26.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m27.0s), 15/50 VUs, 1635 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m28.0s), 12/50 VUs, 1638 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m29.0s), 05/50 VUs, 1645 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+running (1m30.0s), 03/50 VUs, 1647 complete and 0 interrupted iterations
+mapa ↓ [ 100% ] 50 VUs  1m0s
+
+     ✗ HTTP 200
+      ↳  97% — ✓ 1606 / ✗ 44
+     ✗ devuelve 200 puntos
+      ↳  97% — ✓ 1606 / ✗ 44
+
+   ✗ checks.........................: 97.33% 3212 out of 3300
+     data_received..................: 62 MB  683 kB/s
+     data_sent......................: 720 kB 8.0 kB/s
+     http_req_blocked...............: avg=273.98ms min=0s      med=3.57ms  max=19.55s   p(90)=14.26ms  p(95)=21.59ms 
+     http_req_connecting............: avg=273.87ms min=0s      med=3.45ms  max=19.55s   p(90)=14.24ms  p(95)=21.51ms 
+     http_req_duration..............: avg=38.54ms  min=0s      med=27.42ms max=272.44ms p(90)=72.95ms  p(95)=105.84ms
+     ✓ { escenario:mapa }...........: avg=38.51ms  min=0s      med=27.41ms max=272.44ms p(90)=72.68ms  p(95)=105.86ms
+       { expected_response:true }...: avg=39.59ms  min=11.19ms med=27.81ms max=272.44ms p(90)=74.26ms  p(95)=107.76ms
+   ✗ http_req_failed................: 2.66%  44 out of 1652
+     http_req_receiving.............: avg=5.94ms   min=0s      med=3.89ms  max=94.57ms  p(90)=11.07ms  p(95)=16.3ms  
+     http_req_sending...............: avg=105.88µs min=0s      med=73.06µs max=7.16ms   p(90)=155.18µs p(95)=217.55µs
+     http_req_tls_handshaking.......: avg=0s       min=0s      med=0s      max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=32.49ms  min=0s      med=21.04ms max=270.61ms p(90)=62.77ms  p(95)=88.91ms 
+     http_reqs......................: 1652   18.329564/s
+     iteration_duration.............: avg=2.07s    min=1.01s   med=1.03s   max=31s      p(90)=1.12s    p(95)=2.13s   
+     iterations.....................: 1648   18.285183/s
+     vus............................: 3      min=3            max=50
+     vus_max........................: 50     min=50           max=50
+
+
+running (1m30.1s), 00/50 VUs, 1648 complete and 2 interrupted iterations
+mapa ✓ [ 100% ] 50 VUs  1m0s

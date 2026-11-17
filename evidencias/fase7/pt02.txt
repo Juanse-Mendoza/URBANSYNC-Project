@@ -1,0 +1,19 @@
+PT-02 Caída del servicio de Ubicaciones
+
+---- 1. docker compose stop ubicaciones
+        reporte 1 -> HTTP 201 en 2.037433 s, prioridad=baja, origen=respaldo
+        reporte 2 -> HTTP 201 en 0.016156 s, prioridad=baja, origen=respaldo
+        reporte 3 -> HTTP 201 en 0.017992 s, prioridad=baja, origen=respaldo
+        reporte 4 -> HTTP 201 en 0.031190 s, prioridad=baja, origen=respaldo
+        reporte 5 -> HTTP 201 en 0.019671 s, prioridad=baja, origen=respaldo
+        reporte 6 -> HTTP 201 en 0.018097 s, prioridad=baja, origen=respaldo
+[OK]    Los 6 reportes se guardaron (201) con origen respaldo: 6
+[OK]    Tiempo máximo de respuesta <= 3 s (2.037433 s): 1
+        log del circuit breaker:
+
+---- 2. docker compose start ubicaciones
+[OK]    Prioridades recalculadas tras reiniciar Ubicaciones (16 s): 6
+[OK]    Recálculo en <= 60 s: 1
+        prioridades finales: baja media media media alta alta
+
+Resultado: 4 correctas, 0 fallidas

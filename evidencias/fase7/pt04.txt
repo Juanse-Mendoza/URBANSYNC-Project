@@ -1,0 +1,15 @@
+PT-04 Caída abrupta del servicio clasificacion y reinicio automático
+
+---- 1. El proceso Node del servicio termina abruptamente (simula una caída)
+        proceso principal (PID 44498 en el host) terminado
+
+---- 2. Esperando el reinicio automático y el healthcheck
+[OK]    Docker reinició el contenedor (RestartCount 0 -> 1): 1
+[OK]    El servicio volvió a healthy en 6 s: healthy
+
+---- 3. El sistema responde de nuevo
+[OK]    Petición a través del gateway -> 200 (0.019239 s)
+        {"datos":[{"codigo":"desastre_natural","nombre":"Desastre natural","prioridad_base":"alta","subcategorias":[{"codigo":"arbol_caido","nombre":"Árbol caído"},{"codigo":"deslizamiento","nombre":"Deslizamiento"},{"codigo":"inundacion"
+        estado general: ok
+
+Resultado: 3 correctas, 0 fallidas

@@ -1,0 +1,17 @@
+PT-03 Caída del broker RabbitMQ
+
+---- 1. docker compose stop rabbitmq
+[OK]    Confirmar con RabbitMQ caído -> 200 (0.020970 s)
+        {"id":"f9c56509-5a2d-4482-86a6-6c4920c4f616","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"PT-03 hueco en la via","descripcion":null,"categoria":"infraestructura","subcategoria":"hueco_via","foto_url":null,"priorid
+[OK]    Asignar con RabbitMQ caído -> 201 (0.027833 s)
+        {"id":"72e71dcd-18b8-41b8-a250-91e9630cbafe","incidente_id":"f9c56509-5a2d-4482-86a6-6c4920c4f616","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+        eventos retenidos en outbox: asignaciones=1, incidentes=1
+[OK]    Hay eventos retenidos en los outbox: 1
+        /health: "asignacion":{"disponible":true,"estado":"degradado","servicio":"asignacion","db":true,"broker":false}
+
+---- 2. docker compose start rabbitmq
+[OK]    Outbox publicado tras reiniciar RabbitMQ (15 s): 0
+[OK]    El evento llegó a Clasificación (estado del incidente): asignado
+[OK]    El evento llegó a Notificación (aviso al ente): 1
+
+Resultado: 6 correctas, 0 fallidas

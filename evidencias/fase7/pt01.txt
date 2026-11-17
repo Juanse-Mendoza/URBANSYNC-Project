@@ -1,0 +1,22 @@
+PT-01 Caída del servicio de Notificación
+
+---- 1. docker compose stop notificacion
+[OK]    La API de notificaciones responde 503 mientras está caído -> 503 (5.050760 s)
+        {"error":{"codigo":"SERVICIO_NO_DISPONIBLE","mensaje":"El servicio no está disponible en este momento, intenta más tarde"}}
+
+---- 2. Se crean, confirman y asignan 3 reportes con Notificación caído
+[OK]    Asignación 1 creada aunque Notificación está caído -> 201 (0.026211 s)
+        {"id":"1683906b-1151-4e2d-bc16-f224140913a3","incidente_id":"36d67462-c25d-49a3-a98b-625431a3c9f3","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+[OK]    Asignación 2 creada aunque Notificación está caído -> 201 (0.020526 s)
+        {"id":"9125532e-7d9b-43dd-92cd-2739e5583988","incidente_id":"cb35c2fa-fc18-4372-b338-b0440dca5588","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+[OK]    Asignación 3 creada aunque Notificación está caído -> 201 (0.024315 s)
+        {"id":"7cb98d7e-98d9-4c54-96b2-9fc635f77990","incidente_id":"07a877e6-fd62-49cd-963d-e7ca27a00377","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+        eventos esperando en la cola notificacion.eventos: 9
+[OK]    Eventos retenidos en la cola (>= 9: 3 creados + 3 confirmados + 3 asignados): 1
+
+---- 3. docker compose start notificacion
+[OK]    Cola vaciada tras reiniciar (3 s): 0
+[OK]    Notificaciones nuevas del ciudadano (3 confirmados + 3 asignados): 6
+[OK]    Notificaciones nuevas del ente (3 asignaciones): 3
+
+Resultado: 8 correctas, 0 fallidas
