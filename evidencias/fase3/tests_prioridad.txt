@@ -1,0 +1,16 @@
+PASS test/prioridad.test.js
+  calcularPrioridad(categoriaBase, similares)
+    ✓ un solo reporte conserva la prioridad base (3 ms)
+    ✓ de 2 a 4 similares sube un nivel (1 ms)
+    ✓ 5 o más similares siempre es alta
+    ✓ PF-04: el quinto reporte de infraestructura a menos de 50 m es alta (1 ms)
+    ✓ datos inválidos de similares devuelven la base (1 ms)
+    ✓ una prioridad base desconocida lanza error (8 ms)
+  maxPrioridad
+    ✓ devuelve la mayor
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        0.278 s
+Ran all test suites.

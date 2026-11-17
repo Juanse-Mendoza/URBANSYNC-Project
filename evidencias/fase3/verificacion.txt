@@ -1,0 +1,105 @@
+Zona de prueba: 4.556000, -73.438400
+
+=== RF-CLA-02 Categorías ===
+[OK]    GET /api/categorias -> 200 (0.007962 s)
+        {"datos":[{"codigo":"desastre_natural","nombre":"Desastre natural","prioridad_base":"alta","subcategorias":[{"codigo":"arbol_caido","nombre":"Árbol caído"},{"codigo":"deslizamiento","nombre":"Deslizamiento"},{"codigo":"inundacion"
+
+=== PF-03 Crear incidente ===
+[OK]    Sin encabezado Idempotency-Key -> 400 (0.032485 s)
+        {"error":{"codigo":"DATOS_INVALIDOS","mensaje":"El encabezado Idempotency-Key es obligatorio"}}
+[OK]    Crear incidente de seguridad -> 201 (0.017972 s)
+        {"id":"fa4fc340-0691-4b13-9b3d-209359cbdaa7","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Robo en el parque","descripcion":"Robaron un celular","categoria":"seguridad","subcategoria":"robo","foto_url":null,"priori
+[OK]    Estado inicial: pendiente
+[OK]    Prioridad (seguridad, 1 reporte): media
+[OK]    Tiempo de respuesta <= 3 s: si
+
+=== PC-03 Idempotencia (misma Idempotency-Key) ===
+[OK]    Reenvío con la misma clave -> 200 (0.007493 s)
+        {"id":"fa4fc340-0691-4b13-9b3d-209359cbdaa7","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Robo en el parque","descripcion":"Robaron un celular","categoria":"seguridad","subcategoria":"robo","foto_url":null,"priori
+[OK]    Devuelve el mismo incidente: fa4fc340-0691-4b13-9b3d-209359cbdaa7
+
+=== Validaciones ===
+[OK]    Subcategoría de otra categoría -> 400 (0.008663 s)
+        {"error":{"codigo":"SUBCATEGORIA_INVALIDA","mensaje":"La subcategoría no pertenece a la categoría Infraestructura"}}
+[OK]    Radio fuera de 25-200 m -> 400 (0.031219 s)
+        {"error":{"codigo":"DATOS_INVALIDOS","mensaje":"El radio debe estar entre 25 y 200 metros"}}
+[OK]    Supervisor intenta crear un reporte -> 403 (0.004584 s)
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes permisos para realizar esta acción"}}
+
+=== PF-04 Cinco reportes de infraestructura a menos de 50 m ===
+[OK]    Reporte 1 -> HTTP 201, prioridad: baja
+[OK]    Reporte 2 -> HTTP 201, prioridad: media
+[OK]    Reporte 3 -> HTTP 201, prioridad: media
+[OK]    Reporte 4 -> HTTP 201, prioridad: media
+[OK]    Reporte 5 -> HTTP 201, prioridad: alta
+
+=== RF-CLA-07 / RF-CLA-04 Listados ===
+[OK]    Mis reportes (ciudadano) -> 200 (0.007196 s)
+        {"datos":[{"id":"f34901c5-85e8-4f5c-8925-8b755b7052dc","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Hueco en la via 5","descripcion":null,"categoria":"infraestructura","subcategoria":"hueco_via","foto_url":null,"p
+[OK]    Bandeja del supervisor con filtros -> 200 (0.007983 s)
+        {"datos":[{"id":"f34901c5-85e8-4f5c-8925-8b755b7052dc","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Hueco en la via 5","descripcion":null,"categoria":"infraestructura","subcategoria":"hueco_via","foto_url":null,"p
+
+=== Detalle y autorización por propiedad (OWASP API1) ===
+[OK]    Dueño ve su incidente con historial -> 200 (0.008272 s)
+        {"id":"fa4fc340-0691-4b13-9b3d-209359cbdaa7","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Robo en el parque","descripcion":"Robaron un celular","categoria":"seguridad","subcategoria":"robo","foto_url":null,"priori
+[OK]    Otro ciudadano intenta ver el incidente -> 403 (0.009626 s)
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes acceso a este incidente"}}
+[OK]    Supervisor ve el detalle -> 200 (0.008010 s)
+        {"id":"fa4fc340-0691-4b13-9b3d-209359cbdaa7","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Robo en el parque","descripcion":"Robaron un celular","categoria":"seguridad","subcategoria":"robo","foto_url":null,"priori
+[OK]    Incidente inexistente -> 404 (0.007650 s)
+        {"error":{"codigo":"INCIDENTE_NO_ENCONTRADO","mensaje":"El incidente no existe"}}
+
+=== RF-CLA-05 Confirmación con control de versión ===
+[OK]    Supervisor confirma y sube prioridad (version 1) -> 200 (0.009517 s)
+        {"id":"fa4fc340-0691-4b13-9b3d-209359cbdaa7","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Robo en el parque","descripcion":"Robaron un celular","categoria":"seguridad","subcategoria":"robo","foto_url":null,"priori
+[OK]    Estado: confirmado
+[OK]    Origen de prioridad: supervisor
+[OK]    Nueva versión: 2
+[OK]    Segundo supervisor con versión vieja (1) -> 409 (0.008731 s)
+        {"error":{"codigo":"VERSION_CONFLICTO","mensaje":"El incidente fue modificado por otra persona. Recarga la información e intenta de nuevo"}}
+
+=== RF-UBI-03/04/02 Mapa, similares y radio ===
+[OK]    Mapa alrededor de la zona -> 200 (0.010764 s)
+        {"datos":[{"incidente_id":"f34901c5-85e8-4f5c-8925-8b755b7052dc","categoria":"infraestructura","lat":4.55646,"lng":-73.4384,"radio_m":50,"creado_en":"2026-11-17T02:37:16.182Z"},{"incidente_id":"5abee7e1-0623-4277-8f32-4e997e68b997",
+[OK]    Puntos en el mapa (1 seguridad + 5 infraestructura): 6
+[OK]    Mapa filtrado por infraestructura: 5
+[OK]    Similares del 5.º reporte -> 200 (0.010092 s)
+        {"incidente":{"incidente_id":"f34901c5-85e8-4f5c-8925-8b755b7052dc","categoria":"infraestructura","lat":4.55646,"lng":-73.4384,"radio_m":50,"creado_en":"2026-11-17T02:37:16.182Z"},"radioM":50,"datos":[{"incidente_id":"5abee7e1-0623-
+[OK]    Reportes cercanos de la misma categoría: 4
+[OK]    Supervisor ajusta el radio a 120 m -> 200 (0.008706 s)
+        {"incidente_id":"f34901c5-85e8-4f5c-8925-8b755b7052dc","categoria":"infraestructura","lat":4.55646,"lng":-73.4384,"radio_m":120,"creado_en":"2026-11-17T02:37:16.182Z"}
+[OK]    Mapa con longitud inválida -> 400 (0.008127 s)
+        {"error":{"codigo":"DATOS_INVALIDOS","mensaje":"La longitud debe estar entre -180 y 180"}}
+
+=== Evento incidente.creado en RabbitMQ (outbox) ===
+        mensajes en notificacion.eventos: 33
+"payload":"{\"tipo\":\"incidente.creado\",\"datos\":{\"titulo\":\"Robo en el parque\",\"categoria\":\"seguridad\",\"prioridad\":\"media\",\"ciudadanoId\":\"21e69572-cb55-47ac-a2ce-a6254219b648\"}
+[OK]    Hay un evento incidente.creado en la cola: 1
+[OK]    Filas del outbox sin publicar: 0
+
+=== PT-02 Ubicaciones caído: prioridad de respaldo y recálculo ===
+        ubicaciones detenido
+        reporte 1 -> HTTP 201 en 2.013423 s, prioridad=baja, origen=respaldo, recalcular=true
+[OK]    Crear con Ubicaciones caído -> 201 (2.013423 s)
+        {"id":"4f1eb66b-513d-4616-a871-382f86a0630b","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Fuga de agua 1","descripcion":null,"categoria":"infraestructura","subcategoria":"fuga_agua","foto_url":null,"prioridad":"ba
+[OK]    Respuesta <= 3 s: si
+[OK]    Origen: respaldo
+        reporte 2 -> HTTP 201 en 2.013613 s, prioridad=baja, origen=respaldo, recalcular=true
+        reporte 3 -> HTTP 201 en 2.014101 s, prioridad=baja, origen=respaldo, recalcular=true
+        reporte 4 -> HTTP 201 en 2.014771 s, prioridad=baja, origen=respaldo, recalcular=true
+        reporte 5 -> HTTP 201 en 2.015315 s, prioridad=baja, origen=respaldo, recalcular=true
+        reporte 6 -> HTTP 201 en 0.010158 s, prioridad=baja, origen=respaldo, recalcular=true
+        log del circuit breaker:
+        {"nivel":"warn","fecha":"2026-11-17T02:37:13.471Z","servicio":"clasificacion","breaker":"ubicaciones","de":"semiabierto","a":"cerrado","fallosConsecutivos":0,"mensaje":"Circuit breaker \"ubicaciones\": semiabierto -> cerrado"}
+        {"nivel":"warn","fecha":"2026-11-17T02:37:35.529Z","servicio":"clasificacion","breaker":"ubicaciones","de":"cerrado","a":"abierto","fallosConsecutivos":5,"mensaje":"Circuit breaker \"ubicaciones\": cerrado -> abierto"}
+        ubicaciones iniciado; esperando el recálculo (máx. 75 s)...
+[OK]    Recalculado tras reiniciar Ubicaciones (recalcular_prioridad): false
+[OK]    Tiempo hasta el recálculo <= 60 s (31 s): 1
+[OK]    Origen tras el recálculo: automatica
+[OK]    6.º reporte recalculado (6 similares): alta
+[OK]    1.er reporte recalculado (1 similar): baja
+        {"nivel":"info","fecha":"2026-11-17T02:38:08.141Z","servicio":"clasificacion","incidenteId":"9d3cc2fa-efba-4a19-8364-bc41271e8af0","de":"baja","a":"media","similares":4,"mensaje":"Prioridad recalculad
+        {"nivel":"info","fecha":"2026-11-17T02:38:08.148Z","servicio":"clasificacion","incidenteId":"8e155933-0e24-47f5-b18d-0422d4406812","de":"baja","a":"alta","similares":5,"mensaje":"Prioridad recalculada
+        {"nivel":"info","fecha":"2026-11-17T02:38:08.155Z","servicio":"clasificacion","incidenteId":"dc0f1d62-9e4a-4927-8514-b6e1a1371314","de":"baja","a":"alta","similares":6,"mensaje":"Prioridad recalculada
+
+Resultado: 44 correctas, 0 fallidas

@@ -43,6 +43,7 @@ CREATE TABLE incidentes.incidente (
   prioridad_origen      incidentes.origen_prioridad NOT NULL DEFAULT 'automatica',
   recalcular_prioridad  boolean NOT NULL DEFAULT false,
   estado                incidentes.estado_incidente NOT NULL DEFAULT 'pendiente',
+  ente_asignado_id      uuid,               -- copia local (evento asignacion.creada) para autorizar al ente
   lat                   double precision NOT NULL CHECK (lat BETWEEN -90 AND 90),
   lng                   double precision NOT NULL CHECK (lng BETWEEN -180 AND 180),
   radio_m               int NOT NULL DEFAULT 50 CHECK (radio_m BETWEEN 25 AND 200),
