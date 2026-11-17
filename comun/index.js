@@ -10,4 +10,5 @@ module.exports = {
   ...require('./outbox'),
   ...require('./salud'),
   ...require('./app'),
+  ...require('./paginacion'),
 };

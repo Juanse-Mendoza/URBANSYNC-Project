@@ -24,8 +24,12 @@ function enviarError(res, status, codigo, mensaje) {
 }
 
 /** Traduce un "issue" de zod a un mensaje en español. */
+const MENSAJE_POR_DEFECTO_ZOD = /^(Invalid|Required|Expected|String must|Number must|Array must|Unrecognized)/;
+
 function mensajeZod(issue) {
   const campo = issue.path.length ? issue.path.join('.') : 'cuerpo';
+  // Si el esquema definió un mensaje propio (en español), se respeta.
+  if (issue.message && !MENSAJE_POR_DEFECTO_ZOD.test(issue.message)) return issue.message;
   switch (issue.code) {
     case 'invalid_type':
       return issue.received === 'undefined'

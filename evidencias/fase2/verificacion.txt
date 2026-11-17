@@ -1,0 +1,80 @@
+=== PF-01 Registro de ciudadano ===
+[OK]    Registro válido -> 201
+        {"id":"f34fd12f-3ec2-4fb9-a1b4-75bee1df1038","nombre":"Ana P�rez","correo":"ana.1794881778@correo.co","telefono":"3105556677","barrio":"Kennedy","rol":"ciudadano","categoria_atencion":null,"creado_en":"2026-11-17T02:16:19.047Z"}
+[OK]    Correo repetido -> 409
+        {"error":{"codigo":"CORREO_REGISTRADO","mensaje":"Ya existe una cuenta con ese correo"}}
+[OK]    Datos inválidos -> 400
+        {"error":{"codigo":"DATOS_INVALIDOS","mensaje":"El nombre debe tener al menos 2 caracteres"}}
+[OK]    Intento de registrarse como admin (campo no permitido) -> 400
+        {"error":{"codigo":"DATOS_INVALIDOS","mensaje":"Campos no permitidos: rol"}}
+
+=== PF-02 Login ===
+[OK]    Login ciudadano demo -> 200
+        {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2wiOiJjaXVkYWRhbm8iLCJub21icmUiOiJDaXVkYWRhbm8gRGVtbyIsImlhdCI6MTc5NDg4MTc3OSwiZXhwIjoxNzk0ODg0NDc5LCJpc3MiOiJ1cmJhbnN5bmMiLCJzdWIiOiJmZWRhYWFkYi1mOWNlLTQ5YzMtYjIyZS01N2NlMWZlMDQyZTQifQ.XH_8Da74BkHUmt
+
+=== Autenticación en el gateway ===
+[OK]    GET /me con token -> 200
+        {"id":"fedaaadb-f9ce-49c3-b22e-57ce1fe042e4","nombre":"Ciudadano Demo","correo":"ciudadano@urbansync.co","telefono":"3001234567","barrio":"Chapinero","rol":"ciudadano","categoria_atencion":null,"creado_en":"2026-11-17T02:15:04.646Z"}
+[OK]    GET /me sin token -> 401
+        {"error":{"codigo":"TOKEN_REQUERIDO","mensaje":"Debes iniciar sesión para acceder a este recurso"}}
+[OK]    GET /me con token inválido -> 401
+        {"error":{"codigo":"TOKEN_INVALIDO","mensaje":"El token de sesión no es válido"}}
+
+=== Autorización por rol ===
+[OK]    PI-04 ciudadano en GET /api/incidentes -> 403
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes permisos para realizar esta acción"}}
+[OK]    Ciudadano falsificando X-Usuario-Rol: supervisor -> 403
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes permisos para realizar esta acción"}}
+[OK]    Supervisor lista entes de seguridad -> 200
+        {"datos":[{"id":"1bd5f2e8-f0b9-479d-98dd-f57c4d3e7748","nombre":"Ente Seguridad","correo":"ente.seguridad@urbansync.co","telefono":null,"barrio":null,"rol":"ente_gestion","categoria_atencion":"seguridad","creado_en":"2026-11-17T02:15:04.521Z"}],"pagina
+[OK]    Supervisor lista todos los entes -> 200
+        {"datos":[{"id":"a0e97cf9-5762-40de-8189-938aa5751b00","nombre":"Ente Emergencias","correo":"ente.emergencias@urbansync.co","telefono":null,"barrio":null,"rol":"ente_gestion","categoria_atencion":"desastre_natural","creado_en":"2026-11-17T02:15:04.588Z
+[OK]    Ciudadano intenta crear supervisor -> 403
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes permisos para realizar esta acción"}}
+[OK]    RF-USU-06 admin crea ente de gestión -> 201
+        {"id":"13db2953-8a89-42d4-a5c4-b5f7b8b98bae","nombre":"Ente Aseo","correo":"ente.aseo.1794881781@urbansync.co","telefono":null,"barrio":null,"rol":"ente_gestion","categoria_atencion":"infraestructura","creado_en":"2026-11-17T02:16:21.472Z"}
+[OK]    Ciudadano edita su barrio -> 200
+        {"id":"fedaaadb-f9ce-49c3-b22e-57ce1fe042e4","nombre":"Ciudadano Demo","correo":"ciudadano@urbansync.co","telefono":"3001234567","barrio":"Suba","rol":"ciudadano","categoria_atencion":null,"creado_en":"2026-11-17T02:15:04.646Z"}
+[OK]    Ciudadano intenta cambiar su rol -> 400
+        {"error":{"codigo":"DATOS_INVALIDOS","mensaje":"Campos no permitidos: rol"}}
+[OK]    Ruta /internal no expuesta en el gateway -> 404
+        {"error":{"codigo":"RUTA_NO_ENCONTRADA","mensaje":"La ruta solicitada no existe"}}
+
+=== Llamada directa a un servicio (sin pasar por el gateway) ===
+[OK]    Servicio usuario sin X-Gateway-Token -> 401
+        {"error":{"codigo":"NO_AUTORIZADO","mensaje":"Acceso no autorizado"}}
+
+=== RF-USU-03 Recuperación de contraseña (simulada) ===
+[OK]    Solicitar recuperación -> 200
+        {"mensaje":"Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña"}
+        token leído del log: 74a657ecda13...
+[OK]    Restablecer con token -> 200
+        {"mensaje":"Contraseña actualizada correctamente"}
+[OK]    Reusar el mismo token (un solo uso) -> 400
+        {"error":{"codigo":"TOKEN_INVALIDO","mensaje":"El token es inválido o ya expiró"}}
+[OK]    Login con la nueva contraseña -> 200
+        {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2wiOiJjaXVkYWRhbm8iLCJub21icmUiOiJBbmEgUO-_vXJleiIsImlhdCI6MTc5NDg4MTc4NCwiZXhwIjoxNzk0ODg0NDg0LCJpc3MiOiJ1cmJhbnN5bmMiLCJzdWIiOiJmMzRmZDEyZi0zZWMyLTRmYjktYTFiNC03NWJlZTFkZjEwMzgifQ.QoPoMReiHahgGfTOp_
+
+=== RF-USU-02 Bloqueo tras 5 intentos fallidos ===
+[OK]    Intento fallido 1 -> 401
+        {"error":{"codigo":"CREDENCIALES_INVALIDAS","mensaje":"Correo o contraseña incorrectos"}}
+[OK]    Intento fallido 2 -> 401
+        {"error":{"codigo":"CREDENCIALES_INVALIDAS","mensaje":"Correo o contraseña incorrectos"}}
+[OK]    Intento fallido 3 -> 401
+        {"error":{"codigo":"CREDENCIALES_INVALIDAS","mensaje":"Correo o contraseña incorrectos"}}
+[OK]    Intento fallido 4 -> 401
+        {"error":{"codigo":"CREDENCIALES_INVALIDAS","mensaje":"Correo o contraseña incorrectos"}}
+[OK]    Intento fallido 5 (bloquea) -> 423
+        {"error":{"codigo":"CUENTA_BLOQUEADA","mensaje":"Demasiados intentos fallidos. La cuenta quedó bloqueada por 5 minutos"}}
+[OK]    Contraseña correcta con cuenta bloqueada -> 423
+        {"error":{"codigo":"CUENTA_BLOQUEADA","mensaje":"La cuenta está bloqueada por intentos fallidos. Intenta de nuevo en 5 minuto(s)"}}
+
+=== Rate limit de /login (10/min) ===
+[OK]    Petición 12 de login en el mismo minuto -> 429
+        {"error":{"codigo":"DEMASIADAS_PETICIONES","mensaje":"Demasiados intentos de inicio de sesión. Espera un minuto e intenta de nuevo"}}
+
+=== Servicio caído -> 503 desde el gateway ===
+[OK]    GET /api/notificaciones con notificacion detenido -> 503
+        {"error":{"codigo":"SERVICIO_NO_DISPONIBLE","mensaje":"El servicio no está disponible en este momento, intenta más tarde"}}
+
+Resultado: 30 correctas, 0 fallidas

@@ -152,6 +152,8 @@ services:
       PORT: 8080
       JWT_SECRET: ${JWT_SECRET}
       CORS_DESARROLLO: "true"   # CORS abierto solo en desarrollo
+      RATE_LIMIT_GENERAL: ${RATE_LIMIT_GENERAL:-100}
+      RATE_LIMIT_LOGIN: ${RATE_LIMIT_LOGIN:-10}
     ports:
       - "8080:8080"
     depends_on:
