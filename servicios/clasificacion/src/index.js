@@ -10,6 +10,7 @@ const { crearRepositorioIncidentes } = require('./repositorios/incidentes');
 const { crearClienteUbicaciones } = require('./clientes/ubicaciones');
 const { crearServicioIncidentes } = require('./servicios/incidentes');
 const { iniciarRecalculo } = require('./servicios/recalculo');
+const { crearConsumidorAsignaciones } = require('./eventos/consumidorAsignaciones');
 const { crearControladorIncidentes } = require('./controladores/incidentes');
 const { rutasCategorias, rutasIncidentes, rutasInternas } = require('./rutas/incidentes');
 
@@ -36,8 +37,8 @@ finalizarApp(app, logger);
 
 async function iniciar() {
   await db.conectar();
+  await mensajeria.consumir('clasificacion.eventos', crearConsumidorAsignaciones({ db, repo, logger }));
   await mensajeria.conectar();
-  // Consumidor de eventos de asignación: se agrega en la Fase 4.
   const outbox = iniciarPublicadorOutbox({ db, mensajeria, logger });
   const recalculo = iniciarRecalculo({
     repo, servicio, clienteUbicaciones: clienteRecalculo, logger,

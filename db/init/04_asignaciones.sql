@@ -7,6 +7,8 @@ CREATE TABLE asignaciones.asignacion (
   ciudadano_id    uuid NOT NULL,
   ente_id         uuid NOT NULL,
   supervisor_id   uuid NOT NULL,
+  titulo          varchar(120) NOT NULL,   -- copia del incidente para la bandeja del ente
+  categoria       varchar(30) NOT NULL,
   estado          asignaciones.estado_asignacion NOT NULL DEFAULT 'recibido',
   activa          boolean NOT NULL DEFAULT true,
   solucion        varchar(1000),

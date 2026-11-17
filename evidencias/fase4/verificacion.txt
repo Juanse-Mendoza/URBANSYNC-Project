@@ -1,0 +1,116 @@
+=== PF-05 Asignar un incidente confirmado a un ente (RF-ASG-01) ===
+[OK]    Asignar incidente aún pendiente -> 409 (0.010762 s)
+        {"error":{"codigo":"INCIDENTE_NO_ASIGNABLE","mensaje":"Solo se pueden asignar incidentes confirmados (estado actual: pendiente)"}}
+[OK]    Asignar a un id que no es un ente -> 400 (0.014159 s)
+        {"error":{"codigo":"ENTE_INVALIDO","mensaje":"El ente de gestión no existe"}}
+[OK]    Ciudadano intenta asignar -> 403 (0.004288 s)
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes permisos para realizar esta acción"}}
+[OK]    Supervisor asigna al ente de infraestructura -> 201 (0.015212 s)
+        {"id":"fc779808-bd2b-4a5f-bb0e-df7dfef9b633","incidente_id":"a887d426-4b5b-432a-9641-c15f397c2987","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+
+=== PI-02 Evento asignacion.creada -> Clasificación cambia el estado ===
+[OK]    Estado del incidente tras el evento: asignado
+
+=== PI-03 / RF-NOT-03 Evento -> Notificación al ente y al ciudadano ===
+[OK]    Notificaciones nuevas del ente: 1
+[OK]    Notificaciones nuevas del ciudadano: 1
+[OK]    Historial de notificaciones del ente -> 200 (0.010663 s)
+        {"datos":[{"id":"2426dad7-5cf3-4a5d-a093-c8097a429cb8","usuario_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","tipo":"asignacion.creada","titulo":"Nuevo incidente asignado","mensaje":"Se te asignó el incidente «Fuga de agua en la esq
+
+=== RF-ASG-02 Bandeja del ente y acceso al detalle ===
+[OK]    Mis asignaciones (ente) -> 200 (0.008965 s)
+        {"datos":[{"id":"fc779808-bd2b-4a5f-bb0e-df7dfef9b633","incidente_id":"a887d426-4b5b-432a-9641-c15f397c2987","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9
+[OK]    La asignación aparece en su bandeja: 1
+[OK]    Ente asignado ve el detalle del incidente -> 200 (0.008039 s)
+        {"id":"a887d426-4b5b-432a-9641-c15f397c2987","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Fuga de agua en la esquina","descripcion":null,"categoria":"infraestructura","subcategoria":"fuga_agua","foto_url":null,"pr
+[OK]    Otro ente intenta ver el detalle -> 403 (0.007243 s)
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes acceso a este incidente"}}
+
+=== PF-06 El ente actualiza el estado (RF-ASG-03/04) ===
+[OK]    Saltar de recibido a resuelto -> 409 (0.007755 s)
+        {"error":{"codigo":"TRANSICION_INVALIDA","mensaje":"No se puede pasar de \"recibido\" a \"resuelto\""}}
+[OK]    Otro ente intenta actualizar -> 403 (0.008003 s)
+        {"error":{"codigo":"PROHIBIDO","mensaje":"Esta asignación no te pertenece"}}
+[OK]    Ente pasa a en_atencion -> 200 (0.010941 s)
+        {"id":"fc779808-bd2b-4a5f-bb0e-df7dfef9b633","incidente_id":"a887d426-4b5b-432a-9641-c15f397c2987","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+[OK]    Estado del incidente (evento): en_atencion
+[OK]    Resolver sin describir la solución -> 400 (0.008455 s)
+        {"error":{"codigo":"SOLUCION_REQUERIDA","mensaje":"Para marcar como resuelto debes describir la solución"}}
+[OK]    Resolver con versión vieja -> 409 (0.007762 s)
+        {"error":{"codigo":"VERSION_CONFLICTO","mensaje":"La asignación fue modificada por otra persona. Recarga la información e intenta de nuevo"}}
+[OK]    Ente resuelve con solución -> 200 (0.013255 s)
+        {"id":"fc779808-bd2b-4a5f-bb0e-df7dfef9b633","incidente_id":"a887d426-4b5b-432a-9641-c15f397c2987","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+[OK]    Estado del incidente (evento): resuelto
+[OK]    RF-NOT-01 notificación 'resuelto' al ciudadano: 1
+        última: Reporte resuelto - Tu reporte «Fuga de agua en la esquina» está resuelto. Solución: Se cambio el tramo de tuberia
+        historial: pendiente confirmado asignado en_atencion resuelto 
+
+=== PC-02 Dos asignaciones simultáneas del mismo incidente ===
+[OK]    Códigos de las dos peticiones en paralelo: 201 409 
+[OK]    Asignaciones activas del incidente en la BD: 1
+
+=== RF-ASG-06 Reasignación y RF-ASG-05 historial ===
+[OK]    Reasignar al mismo ente -> 400 (0.008132 s)
+        {"error":{"codigo":"MISMO_ENTE","mensaje":"El incidente ya está asignado a ese ente"}}
+[OK]    Supervisor reasigna a infraestructura -> 200 (0.015184 s)
+        {"anterior":{"id":"7ac30ac6-0323-4767-9fd8-823452fcb39d","incidente_id":"514dad79-2a77-4cec-8130-cddc76dc0c73","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"2303b507-9cff-4bb2-bdda-15535c9bb30a","supervisor_id":"0
+[OK]    Notificación al nuevo ente: 1
+[OK]    El nuevo ente ya ve el detalle -> 200 (0.007976 s)
+        {"id":"514dad79-2a77-4cec-8130-cddc76dc0c73","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Calle sin luz","descripcion":null,"categoria":"seguridad","subcategoria":"zona_oscura","foto_url":null,"prioridad":"media",
+[OK]    El ente anterior ya no lo ve -> 403 (0.006752 s)
+        {"error":{"codigo":"PROHIBIDO","mensaje":"No tienes acceso a este incidente"}}
+[OK]    El ente anterior intenta actualizar la asignación desactivada -> 409 (0.007282 s)
+        {"error":{"codigo":"ASIGNACION_INACTIVA","mensaje":"La asignación ya no está activa (fue reasignada)"}}
+[OK]    Historial de asignaciones del incidente -> 200 (0.007872 s)
+        {"incidenteId":"514dad79-2a77-4cec-8130-cddc76dc0c73","datos":[{"id":"7ac30ac6-0323-4767-9fd8-823452fcb39d","incidente_id":"514dad79-2a77-4cec-8130-cddc76dc0c73","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"2303b
+[OK]    Asignaciones en el historial: 2
+
+=== RF-NOT-02 Incidente de prioridad alta -> supervisores ===
+[OK]    Prioridad del incidente: alta
+[OK]    Notificaciones nuevas del supervisor: 1
+
+=== RF-NOT-04 Marcar notificaciones como leídas ===
+[OK]    Marcar una notificación ajena -> 404 (0.024715 s)
+        {"error":{"codigo":"NOTIFICACION_NO_ENCONTRADA","mensaje":"La notificación no existe"}}
+[OK]    Marcar la propia como leída -> 200 (0.008368 s)
+        {"id":"3303c948-75e2-43ba-966d-27cbf663de2f","usuario_id":"21e69572-cb55-47ac-a2ce-a6254219b648","tipo":"asignacion.creada","titulo":"Reporte asignado","mensaje":"Tu reporte «Calle sin luz» fue asignado a un ente de gestión","inc
+[OK]    Marcar todas -> 200 (0.008808 s)
+        {"actualizadas":9}
+[OK]    No leídas del ciudadano: 0
+
+=== PT-01 Notificación detenida: los eventos esperan en la cola ===
+        notificacion detenido
+[OK]    Asignar con Notificación caído -> 201 (0.017478 s)
+        {"id":"4f19f0ea-4030-4754-af99-b13445b66792","incidente_id":"11ebcbd4-9f32-49ff-bbe4-57e7e43cc2b0","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+        mensajes esperando en notificacion.eventos: 3
+[OK]    Hay eventos acumulados en la cola (>= 3): 1
+        notificacion iniciado
+[OK]    Cola vaciada tras reiniciar Notificación: 0
+[OK]    El ciudadano recibió confirmado + asignado: 2
+
+=== PT-03 RabbitMQ detenido: el outbox guarda los eventos ===
+        rabbitmq detenido
+[OK]    Confirmar con RabbitMQ caído -> 200 (0.010699 s)
+        {"id":"6fafa804-eec8-40bf-a08b-d85c06999320","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Grafitis en el salon comunal","descripcion":null,"categoria":"seguridad","subcategoria":"vandalismo","foto_url":null,"prior
+[OK]    Asignar con RabbitMQ caído -> 201 (0.015510 s)
+        {"id":"9cb405ea-2114-44cb-9b79-4a6ab9e7e939","incidente_id":"6fafa804-eec8-40bf-a08b-d85c06999320","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","ente_id":"2303b507-9cff-4bb2-bdda-15535c9bb30a","supervisor_id":"0c9be7e5-7634
+        filas pendientes en outbox: asignaciones=1 incidentes=2
+[OK]    Eventos retenidos en el outbox de Asignación: 1
+[OK]    Estado del incidente aún sin el evento: confirmado
+        /health asignacion: "asignacion":{"disponible":true,"estado":"degradado","servicio":"asignacion","db":true,"broker":false}
+        rabbitmq iniciado
+[OK]    Outbox de Asignación publicado tras reiniciar RabbitMQ (15 s): 0
+[OK]    El evento llegó a Clasificación: asignado
+        {"nivel":"warn","fecha":"2026-11-17T02:57:22.209Z","servicio":"asignacion","esperaMs":8000,"motivo":"connect ECONNREFUSED 172.19.0.3:5672","mensaje":"Reconexión a RabbitMQ fallida"}
+        {"nivel":"info","fecha":"2026-11-17T02:57:30.269Z","servicio":"asignacion","mensaje":"Conectado a RabbitMQ"}
+        {"nivel":"info","fecha":"2026-11-17T02:57:30.709Z","servicio":"asignacion","publicados":1,"mensaje":"Eventos publicados desde el outbox"}
+
+=== DLQ: mensajes que no se pueden procesar ===
+[OK]    Mensajes nuevos en urbansync.dlq (JSON inválido + 4 fallos): 2
+        {"nivel":"error","fecha":"2026-11-17T02:57:40.359Z","servicio":"notificacion","cola":"notificacion.eventos","mensaje":"Mensaje con JSON inválido, enviado a la DLQ"}
+        {"nivel":"warn","fecha":"2026-11-17T02:57:40.520Z","servicio":"notificacion","cola":"notificacion.eventos","eventoId":"56baf138-3d76-44a0-bc32-e3b2eae61fe8","tipo":"incidente.creado","reintentos":0,"m
+        {"nivel":"warn","fecha":"2026-11-17T02:57:40.724Z","servicio":"notificacion","cola":"notificacion.eventos","eventoId":"56baf138-3d76-44a0-bc32-e3b2eae61fe8","tipo":"incidente.creado","reintentos":1,"m
+        {"nivel":"warn","fecha":"2026-11-17T02:57:41.126Z","servicio":"notificacion","cola":"notificacion.eventos","eventoId":"56baf138-3d76-44a0-bc32-e3b2eae61fe8","tipo":"incidente.creado","reintentos":2,"m
+        {"nivel":"error","fecha":"2026-11-17T02:57:41.930Z","servicio":"notificacion","cola":"notificacion.eventos","eventoId":"56baf138-3d76-44a0-bc32-e3b2eae61fe8","tipo":"incidente.creado","reintentos":3,"
+
+Resultado: 48 correctas, 0 fallidas

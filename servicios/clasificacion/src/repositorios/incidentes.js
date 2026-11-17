@@ -104,6 +104,29 @@ function crearRepositorioIncidentes(db) {
       return rows[0] || null;
     },
 
+    /** Idempotencia del consumidor: true si el evento no se había procesado. */
+    async marcarEventoProcesado(cx, eventoId) {
+      const { rowCount } = await cx.query(
+        'INSERT INTO eventos_procesados (evento_id) VALUES ($1) ON CONFLICT DO NOTHING',
+        [eventoId],
+      );
+      return rowCount === 1;
+    },
+
+    /** Bloquea la fila (FOR UPDATE) para aplicar el evento sin carreras. */
+    async bloquearPorId(cx, id) {
+      const { rows } = await cx.query(`SELECT ${COLUMNAS} FROM incidente WHERE id = $1 FOR UPDATE`, [id]);
+      return rows[0] || null;
+    },
+
+    async aplicarEstadoEvento(cx, id, estado, enteAsignadoId) {
+      await cx.query(
+        `UPDATE incidente SET estado = $2, ente_asignado_id = $3, version = version + 1, actualizado_en = now()
+          WHERE id = $1`,
+        [id, estado, enteAsignadoId],
+      );
+    },
+
     async pendientesRecalculo(limite) {
       const { rows } = await db.query(
         `SELECT ${COLUMNAS} FROM incidente WHERE recalcular_prioridad ORDER BY creado_en LIMIT $1`,

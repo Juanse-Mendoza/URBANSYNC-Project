@@ -22,7 +22,7 @@ const DLX = 'urbansync.dlx';
 const DLQ = 'urbansync.dlq';
 const COLAS = Object.freeze({
   'notificacion.eventos': ['incidente.creado', 'incidente.confirmado', 'asignacion.*'],
-  'clasificacion.eventos': ['asignacion.creada', 'asignacion.estado_actualizado'],
+  'clasificacion.eventos': ['asignacion.creada', 'asignacion.estado_actualizado', 'asignacion.reasignada'],
 });
 const ESPERAS_REINTENTO_MS = [200, 400, 800];
 const MAX_REINTENTOS = ESPERAS_REINTENTO_MS.length; // 1 intento + 3 reintentos = 4 fallos -> DLQ
