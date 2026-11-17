@@ -1,0 +1,131 @@
+
+================ comun ================
+PASS test/breaker.test.js
+PASS test/app.test.js
+PASS test/httpResiliente.test.js
+
+Test Suites: 3 passed, 3 total
+Tests:       22 passed, 22 total
+Snapshots:   0 total
+Time:        1.985 s
+Ran all test suites.
+
+================ gateway ================
+PASS test/gateway.test.js
+  Gateway: autenticación
+    ✓ ruta protegida sin token -> 401 TOKEN_REQUERIDO (27 ms)
+    ✓ token con firma inválida -> 401 TOKEN_INVALIDO (6 ms)
+    ✓ token expirado -> 401 TOKEN_EXPIRADO (7 ms)
+    ✓ ruta pública (login) pasa sin token (13 ms)
+  Gateway: autorización por rol
+    ✓ PI-04: ciudadano en GET /api/incidentes -> 403 (5 ms)
+    ✓ mayúsculas o "/" final no evaden las reglas (4 ms)
+    ✓ supervisor en GET /api/incidentes -> se reenvía al servicio (7 ms)
+  Gateway: encabezados reenviados
+    ✓ agrega identidad y token interno, y quita Authorization (5 ms)
+    ✓ ignora X-Usuario-Rol y X-Gateway-Token falsificados por el cliente (5 ms)
+  Gateway: enrutamiento y fallos
+    ✓ /internal no está expuesto -> 404 (3 ms)
+    ✓ servicio destino caído -> 503 en español (6 ms)
+    ✓ body mayor a 100 kb -> 413 (2 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       12 passed, 12 total
+Snapshots:   0 total
+Time:        0.954 s
+Ran all test suites.
+
+================ servicios/usuario ================
+PASS test/usuarios.test.js
+  esquemas de Usuario (zod)
+    ✓ registro válido normaliza el correo a minúsculas (2 ms)
+    ✓ registro rechaza el campo "rol" (no se puede auto-asignar) (1 ms)
+    ✓ contraseña sin números es inválida
+    ✓ editar perfil exige al menos un campo y no admite "rol" (1 ms)
+  reglas de negocio de Usuario
+    ✓ el registro público siempre crea rol ciudadano y no devuelve el hash (65 ms)
+    ✓ correo repetido -> 409 CORREO_REGISTRADO (113 ms)
+    ✓ login correcto devuelve un JWT HS256 con sub, rol y nombre (113 ms)
+    ✓ RF-USU-02: el 5.º intento fallido bloquea la cuenta (423), incluso con la clave correcta (352 ms)
+    ✓ correo inexistente -> 401 genérico (no revela si existe) (56 ms)
+    ✓ RF-USU-03: el token de recuperación es de un solo uso (166 ms)
+  API de Usuario (supertest)
+    ✓ sin X-Gateway-Token -> 401 (18 ms)
+    ✓ POST /registro -> 201 (63 ms)
+    ✓ POST /registro con datos inválidos -> 400 con mensaje en español (5 ms)
+    ✓ GET /entes con rol ciudadano -> 403 (segunda capa de autorización) (4 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       14 passed, 14 total
+Snapshots:   0 total
+Time:        1.867 s
+Ran all test suites.
+
+================ servicios/clasificacion ================
+PASS test/prioridad.test.js
+PASS test/incidentes.test.js
+
+Test Suites: 2 passed, 2 total
+Tests:       16 passed, 16 total
+Snapshots:   0 total
+Time:        0.879 s
+Ran all test suites.
+
+================ servicios/ubicaciones ================
+PASS test/ubicaciones.test.js
+  esquemas de Ubicaciones
+    ✓ el radio por defecto del registro es 50 m (2 ms)
+    ✓ lat sin lng en el mapa es inválido (1 ms)
+    ✓ radio fuera de 25-200 m es inválido
+  API de Ubicaciones
+    ✓ POST /internal/ubicaciones sin token interno -> 401 (26 ms)
+    ✓ POST /internal/ubicaciones devuelve el número de similares (6 ms)
+    ✓ GET /mapa con coordenadas inválidas -> 400 (4 ms)
+    ✓ GET /:id/similares: ciudadano -> 403, inexistente -> 404, supervisor -> 200 (5 ms)
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        0.798 s
+Ran all test suites.
+
+================ servicios/asignacion ================
+PASS test/asignaciones.test.js
+  Crear asignación (RF-ASG-01)
+    ✓ incidente confirmado + ente válido -> asignación y evento asignacion.creada (3 ms)
+    ✓ incidente no confirmado -> 409 (1 ms)
+    ✓ el destinatario no es un ente -> 400
+    ✓ PC-02: violación del índice único parcial -> 409 ASIGNACION_ACTIVA (1 ms)
+  Actualizar estado (RF-ASG-03/04)
+    ✓ solo el ente dueño puede actualizar -> 403
+    ✓ no se puede saltar de recibido a resuelto -> 409 (1 ms)
+    ✓ resuelto exige la descripción de la solución -> 400
+    ✓ cambio válido -> seguimiento + evento asignacion.estado_actualizado (1 ms)
+  Reasignar (RF-ASG-06)
+    ✓ desactiva la actual, crea otra y emite asignacion.reasignada (1 ms)
+    ✓ no se reasigna un incidente resuelto
+
+Test Suites: 1 passed, 1 total
+Tests:       10 passed, 10 total
+Snapshots:   0 total
+Time:        0.631 s
+Ran all test suites.
+
+================ servicios/notificacion ================
+PASS test/procesador.test.js
+  Procesador de eventos de Notificación
+    ✓ RF-NOT-02: incidente de prioridad alta notifica a cada supervisor (3 ms)
+    ✓ incidente de prioridad baja no genera notificaciones pero el evento queda procesado
+    ✓ RF-NOT-03 / RF-NOT-01: asignacion.creada avisa al ente y al ciudadano (1 ms)
+    ✓ estado resuelto incluye la solución en el mensaje del ciudadano (4 ms)
+    ✓ idempotencia: el mismo eventoId dos veces genera notificaciones una sola vez (1 ms)
+    ✓ un evento con datos inválidos lanza error (para que mensajeria reintente y lo mande a la DLQ) (6 ms)
+    ✓ un tipo desconocido se ignora sin error
+
+Test Suites: 1 passed, 1 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        0.595 s
+Ran all test suites.
+
+TODOS LOS PAQUETES PASARON

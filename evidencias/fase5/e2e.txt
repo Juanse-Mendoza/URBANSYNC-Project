@@ -1,0 +1,76 @@
+
+---- Paso 1: El sistema está arriba (GET /health)
+[OK]    Gateway y servicios -> 200 (0.013377 s)
+        {"estado":"ok","servicio":"gateway","servicios":{"usuario":{"disponible":true,"estado":"ok","servicio":"usuario","db":true,"broker":"no_aplica"},"clasificacion":{"disponible":true,"estado":"ok","servicio":"clasificacion","db":true,"
+     estado general: ok
+
+---- Paso 2: Un vecino se registra (PF-01)
+[OK]    Registro -> 201 (0.068096 s)
+        {"id":"9c89c66e-5bc3-4aac-a850-06220124de20","nombre":"Laura Gomez","correo":"vecino.1794884599@correo.co","telefono":"3115550000","barrio":"Teusaquillo","rol":"ciudadano","categoria_atencion":null,"creado_en":"2026-11-17T03:03:19.4
+
+---- Paso 3: El vecino inicia sesión (PF-02)
+[OK]    Login ciudadano -> 200 (0.062246 s)
+        {"token":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2wiOiJjaXVkYWRhbm8iLCJub21icmUiOiJMYXVyYSBHb21leiIsImlhdCI6MTc5NDg4NDU5OSwiZXhwIjoxNzk0ODg3Mjk5LCJpc3MiOiJ1cmJhbnN5bmMiLCJzdWIiOiI5Yzg5YzY2ZS01YmMzLTRhYWMtYTg1MC0wNjIyMDEyNGRlMjAif
+     rol: ciudadano
+
+---- Paso 4: La app carga las categorías
+[OK]    Categorías -> 200 (0.007054 s)
+        {"datos":[{"codigo":"desastre_natural","nombre":"Desastre natural","prioridad_base":"alta","subcategorias":[{"codigo":"arbol_caido","nombre":"Árbol caído"},{"codigo":"deslizamiento","nombre":"Deslizamiento"},{"codigo":"inundacion"
+
+---- Paso 5: El vecino reporta un hueco en la vía (PF-03)
+[OK]    Crear incidente -> 201 (0.018354 s)
+        {"id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","titulo":"Hueco profundo frente al colegio","descripcion":"Ya se cayeron dos motos","categoria":"infraestructura","subcategoria":"hue
+     incidente 1656cec4-e0e9-4e7e-9e60-24c45b70bf71: estado=pendiente, prioridad=baja (automatica)
+
+---- Paso 6: El vecino ve sus reportes
+[OK]    Mis reportes -> 200 (0.010745 s)
+        {"datos":[{"id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","titulo":"Hueco profundo frente al colegio","descripcion":"Ya se cayeron dos motos","categoria":"infraestructura","subcateg
+
+---- Paso 7: El supervisor revisa la bandeja de pendientes
+[OK]    Bandeja filtrada -> 200 (0.010862 s)
+        {"datos":[{"id":"dc0f1d62-9e4a-4927-8514-b6e1a1371314","ciudadano_id":"21e69572-cb55-47ac-a2ce-a6254219b648","titulo":"Fuga de agua 6","descripcion":null,"categoria":"infraestructura","subcategoria":"fuga_agua","foto_url":null,"prio
+     pendientes de infraestructura: 28
+
+---- Paso 8: El supervisor confirma el incidente (versión 1)
+[OK]    Confirmar -> 200 (0.009691 s)
+        {"id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","titulo":"Hueco profundo frente al colegio","descripcion":"Ya se cayeron dos motos","categoria":"infraestructura","subcategoria":"hue
+     estado=confirmado, version=2
+
+---- Paso 9: El supervisor busca entes de infraestructura y asigna
+[OK]    Listar entes -> 200 (0.017259 s)
+        {"datos":[{"id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","nombre":"Ente Infraestructura","correo":"ente.infra@urbansync.co","telefono":null,"barrio":null,"rol":"ente_gestion","categoria_atencion":"infraestructura","creado_en":"2026-11
+[OK]    Asignar (PF-05) -> 201 (0.017276 s)
+        {"id":"f3a187cc-621c-436c-9c4e-3369e791a407","incidente_id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+
+---- Paso 10: El ente ve su asignación y su notificación
+[OK]    Mis asignaciones -> 200 (0.007952 s)
+        {"datos":[{"id":"f3a187cc-621c-436c-9c4e-3369e791a407","incidente_id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9
+[OK]    Conteo de no leídas del ente -> 200 (0.007536 s)
+        {"conteo":10}
+     no leídas del ente: 10
+
+---- Paso 11: El ente atiende y resuelve (PF-06)
+[OK]    En atención -> 200 (0.010605 s)
+        {"id":"f3a187cc-621c-436c-9c4e-3369e791a407","incidente_id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+[OK]    Resuelto -> 200 (0.009395 s)
+        {"id":"f3a187cc-621c-436c-9c4e-3369e791a407","incidente_id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","ente_id":"166d5c4f-795c-4198-b32e-e1b5ad2f3103","supervisor_id":"0c9be7e5-7634
+
+---- Paso 12: El vecino ve su reporte resuelto y sus notificaciones
+[OK]    Detalle del reporte -> 200 (0.008759 s)
+        {"id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","titulo":"Hueco profundo frente al colegio","descripcion":"Ya se cayeron dos motos","categoria":"infraestructura","subcategoria":"hue
+     estado final: resuelto
+     historial: pendiente confirmado asignado en_atencion resuelto 
+[OK]    Estado final del incidente: resuelto
+[OK]    Notificaciones del vecino -> 200 (0.010429 s)
+        {"datos":[{"id":"fa1f9e5a-1c45-4bb3-922e-d882d3c02c0a","usuario_id":"9c89c66e-5bc3-4aac-a850-06220124de20","tipo":"asignacion.estado_actualizado","titulo":"Reporte resuelto","mensaje":"Tu reporte «Hueco profundo frente al colegio»
+       • Reporte resuelto
+       • Reporte en atención
+       • Reporte asignado
+       • Reporte confirmado
+[OK]    Notificaciones recibidas (confirmado, asignado, en atención, resuelto): 4
+
+---- Paso 13: El supervisor consulta el historial de asignaciones (RF-ASG-05)
+[OK]    Historial de asignaciones -> 200 (0.007455 s)
+        {"incidenteId":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","datos":[{"id":"f3a187cc-621c-436c-9c4e-3369e791a407","incidente_id":"1656cec4-e0e9-4e7e-9e60-24c45b70bf71","ciudadano_id":"9c89c66e-5bc3-4aac-a850-06220124de20","ente_id":"166d5
+
+Resultado: 19 correctas, 0 fallidas

@@ -1,0 +1,192 @@
+npm warn deprecated har-validator@5.1.5: this library is no longer supported
+npm warn deprecated uuid@8.3.2: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated uuid@3.4.0: uuid@10 and below is no longer supported.  For ESM codebases, update to uuid@latest.  For CommonJS codebases, use uuid@11 (but be aware this version will likely be deprecated in 2028).
+npm warn deprecated @faker-js/faker@5.5.3: Please update to a newer version.
+newman
+
+URBANSYNC - API (MVP)
+
+❏ 0. Salud
+↳ Health del gateway
+  GET http://host.docker.internal:8080/health [200 OK, 1.7kB, 42ms]
+  ✓  HTTP 200
+  ✓  Los cinco servicios disponibles
+
+❏ 1. Usuario y seguridad
+↳ PF-01 Registro de ciudadano
+  POST http://host.docker.internal:8080/api/usuarios/registro [201 Created, 1.45kB, 68ms]
+  ✓  HTTP 201
+  ✓  Rol ciudadano y sin hash
+
+↳ Registro con correo repetido -> 409
+  POST http://host.docker.internal:8080/api/usuarios/registro [409 Conflict, 1.3kB, 68ms]
+  ✓  HTTP 409
+  ✓  Formato de error estándar
+
+↳ PF-02 Login ciudadano
+  POST http://host.docker.internal:8080/api/usuarios/login [200 OK, 1.58kB, 77ms]
+  ✓  HTTP 200
+  ✓  Devuelve token y usuario
+
+↳ Login supervisor (seed)
+  POST http://host.docker.internal:8080/api/usuarios/login [200 OK, 1.6kB, 67ms]
+  ✓  HTTP 200
+
+↳ Login ente de infraestructura (seed)
+  POST http://host.docker.internal:8080/api/usuarios/login [200 OK, 1.61kB, 67ms]
+  ✓  HTTP 200
+
+↳ Perfil propio (GET /me)
+  GET http://host.docker.internal:8080/api/usuarios/me [200 OK, 1.45kB, 11ms]
+  ✓  HTTP 200
+  ✓  Correo del perfil
+
+↳ Sin token -> 401
+  GET http://host.docker.internal:8080/api/usuarios/me [401 Unauthorized, 1.34kB, 10ms]
+  ✓  HTTP 401
+  ✓  Formato de error estándar
+
+↳ PI-04 Ciudadano en bandeja del supervisor -> 403
+  GET http://host.docker.internal:8080/api/incidentes [403 Forbidden, 1.33kB, 5ms]
+  ✓  HTTP 403
+  ✓  Formato de error estándar
+
+↳ Ciudadano intenta cambiar su rol -> 400
+  PUT http://host.docker.internal:8080/api/usuarios/me [400 Bad Request, 1.29kB, 10ms]
+  ✓  HTTP 400
+
+❏ 2. Clasificación y ubicaciones
+↳ Categorías
+  GET http://host.docker.internal:8080/api/categorias [200 OK, 1.93kB, 10ms]
+  ✓  HTTP 200
+  ✓  Tres categorías
+
+↳ PF-03 Crear incidente
+  POST http://host.docker.internal:8080/api/incidentes [201 Created, 1.72kB, 21ms]
+  ✓  HTTP 201
+  ✓  Pendiente con prioridad calculada
+  ✓  Responde en menos de 3 s (RNF-REN-01)
+
+↳ PC-03 Reenvío con la misma Idempotency-Key -> 200
+  POST http://host.docker.internal:8080/api/incidentes [200 OK, 1.72kB, 11ms]
+  ✓  HTTP 200
+  ✓  Mismo incidente
+
+↳ Crear sin Idempotency-Key -> 400
+  POST http://host.docker.internal:8080/api/incidentes [400 Bad Request, 1.31kB, 11ms]
+  ✓  HTTP 400
+  ✓  Formato de error estándar
+
+↳ Mis reportes
+  GET http://host.docker.internal:8080/api/incidentes/mios?pagina=1&limite=10 [200 OK, 1.79kB, 10ms]
+  ✓  HTTP 200
+  ✓  Paginado
+
+↳ Bandeja del supervisor (filtros)
+  GET http://host.docker.internal:8080/api/incidentes?estado=pendiente&categoria=infraestructura [200 OK, 10.91kB, 12ms]
+  ✓  HTTP 200
+
+↳ Detalle con historial (dueño)
+  GET http://host.docker.internal:8080/api/incidentes/04b115ea-2e04-498d-a46c-c2dddc1b7e49 [200 OK, 1.9kB, 11ms]
+  ✓  HTTP 200
+  ✓  Tiene historial
+
+↳ RF-CLA-05 Supervisor confirma (version 1)
+  PATCH http://host.docker.internal:8080/api/incidentes/04b115ea-2e04-498d-a46c-c2dddc1b7e49/clasificacion [200 OK, 1.72kB, 12ms]
+  ✓  HTTP 200
+  ✓  Confirmado y version 2
+
+↳ Confirmar con versión vieja -> 409
+  PATCH http://host.docker.internal:8080/api/incidentes/04b115ea-2e04-498d-a46c-c2dddc1b7e49/clasificacion [409 Conflict, 1.35kB, 10ms]
+  ✓  HTTP 409
+  ✓  Formato de error estándar
+
+↳ Mapa de incidentes
+  GET http://host.docker.internal:8080/api/ubicaciones/mapa?lat=4.6097&lng=-74.0817&radio_m=50000 [200 OK, 1.57kB, 14ms]
+  ✓  HTTP 200
+  ✓  Máximo 200 puntos
+
+↳ Similares (supervisor)
+  GET http://host.docker.internal:8080/api/ubicaciones/04b115ea-2e04-498d-a46c-c2dddc1b7e49/similares [200 OK, 1.42kB, 13ms]
+  ✓  HTTP 200
+
+❏ 3. Asignación y notificaciones
+↳ PF-05 Asignar al ente
+  POST http://host.docker.internal:8080/api/asignaciones [201 Created, 1.68kB, 21ms]
+  ✓  HTTP 201
+
+↳ PC-02 Segunda asignación activa -> 409
+  POST http://host.docker.internal:8080/api/asignaciones [409 Conflict, 1.31kB, 16ms]
+  ✓  HTTP 409
+  ✓  Formato de error estándar
+
+↳ Bandeja del ente
+  GET http://host.docker.internal:8080/api/asignaciones/mias [200 OK, 6.49kB, 9ms]
+  ✓  HTTP 200
+  ✓  Incluye la asignación
+
+↳ PI-02 El incidente pasó a 'asignado' (evento)
+  GET http://host.docker.internal:8080/api/incidentes/04b115ea-2e04-498d-a46c-c2dddc1b7e49 [200 OK, 2.37kB, 11ms]
+  ✓  HTTP 200
+  ✓  Estado asignado
+
+↳ Ente: en atención (version 1)
+  PATCH http://host.docker.internal:8080/api/asignaciones/4eacdab6-bc44-4708-a996-762fed7f9333/estado [200 OK, 1.68kB, 13ms]
+  ✓  HTTP 200
+
+↳ Ente: resolver sin solución -> 400
+  PATCH http://host.docker.internal:8080/api/asignaciones/4eacdab6-bc44-4708-a996-762fed7f9333/estado [400 Bad Request, 1.32kB, 9ms]
+  ✓  HTTP 400
+  ✓  Formato de error estándar
+
+↳ PF-06 Ente: resuelto (version 2)
+  PATCH http://host.docker.internal:8080/api/asignaciones/4eacdab6-bc44-4708-a996-762fed7f9333/estado [200 OK, 1.69kB, 13ms]
+  ✓  HTTP 200
+  ✓  Resuelto
+
+↳ Historial de asignaciones (supervisor)
+  GET http://host.docker.internal:8080/api/asignaciones/incidente/04b115ea-2e04-498d-a46c-c2dddc1b7e49 [200 OK, 2.24kB, 9ms]
+  ✓  HTTP 200
+
+↳ PI-03 El ciudadano ve su reporte resuelto
+  GET http://host.docker.internal:8080/api/incidentes/04b115ea-2e04-498d-a46c-c2dddc1b7e49 [200 OK, 2.73kB, 12ms]
+  ✓  HTTP 200
+  ✓  Estado resuelto
+
+↳ RF-NOT-01 Conteo de no leídas del ciudadano
+  GET http://host.docker.internal:8080/api/notificaciones/no-leidas/conteo [200 OK, 1.21kB, 10ms]
+  ✓  HTTP 200
+  ✓  4 notificaciones (confirmado, asignado, en atención, resuelto)
+
+↳ RF-NOT-04 Historial de notificaciones
+  GET http://host.docker.internal:8080/api/notificaciones?limite=10 [200 OK, 2.73kB, 10ms]
+  ✓  HTTP 200
+
+↳ Otro usuario no puede marcar mi notificación -> 404
+  PATCH http://host.docker.internal:8080/api/notificaciones/2567337d-5da9-43f0-9953-b8bb378dda41/leida [404 Not Found, 1.3kB, 19ms]
+  ✓  HTTP 404
+
+↳ Marcar todas como leídas
+  PATCH http://host.docker.internal:8080/api/notificaciones/leer-todas [200 OK, 1.22kB, 11ms]
+  ✓  HTTP 200
+  ✓  4 actualizadas
+
+┌─────────────────────────┬──────────────────┬──────────────────┐
+│                         │         executed │           failed │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              iterations │                1 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│                requests │               34 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│            test-scripts │               34 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│      prerequest-scripts │                4 │                0 │
+├─────────────────────────┼──────────────────┼──────────────────┤
+│              assertions │               59 │                0 │
+├─────────────────────────┴──────────────────┴──────────────────┤
+│ total run duration: 9.2s                                      │
+├───────────────────────────────────────────────────────────────┤
+│ total data received: 28.9kB (approx)                          │
+├───────────────────────────────────────────────────────────────┤
+│ average response time: 21ms [min: 5ms, max: 77ms, s.d.: 20ms] │
+└───────────────────────────────────────────────────────────────┘
