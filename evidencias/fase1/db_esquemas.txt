@@ -1,0 +1,14 @@
+  table_schema  | tablas 
+----------------+--------
+ asignaciones   |      3
+ incidentes     |      6
+ notificaciones |      2
+ ubicaciones    |      1
+ usuarios       |      1
+(5 rows)
+
+            postgis_version            
+---------------------------------------
+ 3.4 USE_GEOS=1 USE_PROJ=1 USE_STATS=1
+(1 row)
+

@@ -1,0 +1,176 @@
+# URBANSYNC - MVP local. Uso: docker compose up -d --build
+# Los valores ${...} se leen del archivo .env (copiar desde .env.example).
+
+name: urbansync
+
+# Configuración común de los cinco microservicios (ancla YAML).
+x-servicio: &servicio
+  restart: unless-stopped
+  depends_on:
+    db:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+  networks: [urbansync]
+
+x-entorno-comun: &entorno-comun
+  DATABASE_URL: ${DATABASE_URL}
+  RABBITMQ_URL: ${RABBITMQ_URL}
+  GATEWAY_TOKEN: ${GATEWAY_TOKEN}
+  HTTP_TIMEOUT_MS: ${HTTP_TIMEOUT_MS}
+  CB_FALLOS_UMBRAL: ${CB_FALLOS_UMBRAL}
+  CB_ESPERA_MS: ${CB_ESPERA_MS}
+  LOG_LEVEL: ${LOG_LEVEL:-info}
+  URL_SERVICIO_USUARIO: ${URL_SERVICIO_USUARIO}
+  URL_SERVICIO_CLASIFICACION: ${URL_SERVICIO_CLASIFICACION}
+  URL_SERVICIO_UBICACIONES: ${URL_SERVICIO_UBICACIONES}
+  URL_SERVICIO_ASIGNACION: ${URL_SERVICIO_ASIGNACION}
+  URL_SERVICIO_NOTIFICACION: ${URL_SERVICIO_NOTIFICACION}
+
+services:
+  # ---------------- Infraestructura ----------------
+  db:
+    image: postgis/postgis:16-3.4
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"   # solo desarrollo
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    networks: [urbansync]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    hostname: rabbitmq   # nombre de nodo fijo para que el volumen conserve los mensajes
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
+    ports:
+      - "15672:15672" # consola de administración (5672 no se publica)
+    volumes:
+      - rabbitdata:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 15s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks: [urbansync]
+
+  # ---------------- Microservicios (puertos NO publicados) ----------------
+  usuario:
+    <<: *servicio
+    build: { context: ., dockerfile: servicios/usuario/Dockerfile }
+    environment:
+      <<: *entorno-comun
+      PORT: 3001
+      DB_SCHEMA: usuarios
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      SEED: ${SEED}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3001/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  clasificacion:
+    <<: *servicio
+    build: { context: ., dockerfile: servicios/clasificacion/Dockerfile }
+    environment:
+      <<: *entorno-comun
+      PORT: 3002
+      DB_SCHEMA: incidentes
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3002/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  ubicaciones:
+    <<: *servicio
+    build: { context: ., dockerfile: servicios/ubicaciones/Dockerfile }
+    environment:
+      <<: *entorno-comun
+      PORT: 3003
+      DB_SCHEMA: ubicaciones
+      RADIO_SIMILARES_M: ${RADIO_SIMILARES_M}
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3003/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  asignacion:
+    <<: *servicio
+    build: { context: ., dockerfile: servicios/asignacion/Dockerfile }
+    environment:
+      <<: *entorno-comun
+      PORT: 3004
+      DB_SCHEMA: asignaciones
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3004/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  notificacion:
+    <<: *servicio
+    build: { context: ., dockerfile: servicios/notificacion/Dockerfile }
+    environment:
+      <<: *entorno-comun
+      PORT: 3005
+      DB_SCHEMA: notificaciones
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:3005/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+
+  # ---------------- Gateway (único puerto público de la API) ----------------
+  gateway:
+    build: { context: ., dockerfile: gateway/Dockerfile }
+    restart: unless-stopped
+    environment:
+      <<: *entorno-comun
+      PORT: 8080
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_DESARROLLO: "true"   # CORS abierto solo en desarrollo
+    ports:
+      - "8080:8080"
+    depends_on:
+      usuario: { condition: service_healthy }
+      clasificacion: { condition: service_healthy }
+      ubicaciones: { condition: service_healthy }
+      asignacion: { condition: service_healthy }
+      notificacion: { condition: service_healthy }
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks: [urbansync]
+
+networks:
+  urbansync:
+
+volumes:
+  pgdata:
+  rabbitdata:

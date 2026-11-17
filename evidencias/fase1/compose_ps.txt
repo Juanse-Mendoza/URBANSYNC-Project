@@ -1,0 +1,9 @@
+NAME                        STATUS                    PORTS
+urbansync-asignacion-1      Up 28 seconds (healthy)   3004/tcp
+urbansync-clasificacion-1   Up 28 seconds (healthy)   3002/tcp
+urbansync-db-1              Up 34 seconds (healthy)   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
+urbansync-gateway-1         Up 22 seconds (healthy)   0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+urbansync-notificacion-1    Up 28 seconds (healthy)   3005/tcp
+urbansync-rabbitmq-1        Up 34 seconds (healthy)   0.0.0.0:15672->15672/tcp, [::]:15672->15672/tcp
+urbansync-ubicaciones-1     Up 28 seconds (healthy)   3003/tcp
+urbansync-usuario-1         Up 28 seconds (healthy)   3001/tcp

@@ -1,0 +1,22 @@
+{
+  "name": "@urbansync/comun",
+  "version": "1.0.0",
+  "description": "Librería compartida de URBANSYNC: errores, logs, BD, auth interna, HTTP resiliente, breaker, mensajería y outbox",
+  "main": "index.js",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "test": "jest"
+  },
+  "dependencies": {
+    "amqplib": "^0.10.5",
+    "axios": "^1.7.9",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "pino": "^9.6.0",
+    "pino-http": "^10.4.0"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}

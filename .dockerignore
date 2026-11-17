@@ -1,0 +1,8 @@
+**/node_modules
+**/coverage
+.git
+.env
+app_movil
+evidencias
+docs
+pruebas
