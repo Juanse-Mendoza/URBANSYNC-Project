@@ -39,25 +39,26 @@ Ejecución: 16 y 17 de noviembre de 2026, en un solo equipo (Windows 11, 16 GB R
 
 | Id | Prueba | Resultado esperado | Resultado obtenido | Estado |
 |---|---|---|---|---|
-| PI-01 | Gateway ↔ servicios (autenticación y enrutamiento) | Sin token 401; token inválido 401; servicio caído 503 | Sin token → 401 `TOKEN_REQUERIDO`; token falso → 401 `TOKEN_INVALIDO`; Notificación detenido → 503 en español; `/internal/*` → 404; llamada directa a un servicio sin `X-Gateway-Token` → 401 | ✅ Cumple |
-| PI-02 | Asignación → Clasificación por evento | El incidente cambia de estado sin llamada síncrona | Tras `asignacion.creada` el incidente pasa a `asignado` en < 2 s; historial final `pendiente → confirmado → asignado → en_atencion → resuelto` | ✅ Cumple |
-| PI-03 | Eventos → Notificación | Se generan las notificaciones de ente, ciudadano y supervisores | Asignación → 1 notificación al ente y 1 al ciudadano; prioridad alta → 1 por supervisor; resuelto → 1 al ciudadano | ✅ Cumple |
-| PI-04 | Ciudadano consulta la bandeja del supervisor | 403 | 403 `PROHIBIDO` (también con `X-Usuario-Rol: supervisor` falsificado y con `/API/Incidentes/`) | ✅ Cumple |
+| PI-01 | Flujo App → Gateway → Clasificación → Ubicaciones (RF-UBI-01) | Incidente y ubicación registrados; prioridad calculada | 201 con la prioridad calculada a partir de los similares de Ubicaciones (PF-04: baja → … → alta); el punto aparece en el mapa y en `/similares`; p95 de 92 ms con 50 usuarios | ✅ Cumple |
+| PI-02 | Cambio de estado en Asignación (RF-NOT-01) | Clasificación actualiza el estado; el ciudadano recibe la notificación | El evento `asignacion.estado_actualizado` pasa el incidente a `en_atencion` y luego a `resuelto` en < 2 s (historial `pendiente → confirmado → asignado → en_atencion → resuelto`); el ciudadano recibe "Reporte en atención" y "Reporte resuelto" | ✅ Cumple |
+| PI-03 | Asignación de un incidente nuevo (RF-NOT-03, RNF-REN-04) | El ente recibe la notificación en ≤ 60 s | El ente recibe "Nuevo incidente asignado" (1 por asignación; también en la reasignación). Peor caso ≈ 32 s (outbox 2 s + consulta de la app cada 30 s); verificado como notificación del sistema en el celular (Figura 17) | ✅ Cumple |
+| PI-04 | Ciudadano en una ruta de supervisor (RNF-SEG-03) | 403 | 403 `PROHIBIDO` (también con `X-Usuario-Rol: supervisor` falsificado y con `/API/Incidentes/`) | ✅ Cumple |
 
 ## Tabla 19 – Pruebas de concurrencia
 
 | Id | Prueba | Resultado esperado | Resultado obtenido | Estado |
 |---|---|---|---|---|
-| PC-01 | 50 usuarios creando incidentes durante 2 min | < 1 % de errores | **5786 incidentes creados**, 5886 peticiones, **0,00 % de errores**, 100 % de checks | ✅ Cumple |
+| PC-01 | 50 usuarios creando reportes durante 2 min (RNF-ESC-01) | Sin errores 5xx ni registros duplicados | **5786 incidentes creados**, 5886 peticiones, **0 errores (0,00 %)**, ninguna respuesta 5xx; cada reporte con su propia Idempotency-Key → sin duplicados | ✅ Cumple |
 | PC-02 | Dos asignaciones simultáneas del mismo incidente | Una 201 y otra 409 | Respuestas **`201` y `409`** (`ASIGNACION_ACTIVA`); en la BD queda exactamente 1 asignación activa (índice único parcial) | ✅ Cumple |
 | PC-03 | Reenvío con la misma Idempotency-Key | 200 con el incidente original, sin duplicar | 200 con el **mismo id** del incidente original; no se crea una segunda fila | ✅ Cumple |
 
 ## Tabla 20 – Pruebas de rendimiento
 
-| Id | Prueba | Meta | Resultado obtenido | Estado |
+| Id | Prueba | Resultado esperado | Resultado obtenido | Estado |
 |---|---|---|---|---|
 | PR-01 | Tiempo de creación de incidentes con 50 usuarios (2 min) | p95 < 3000 ms | **p95 = 91,9 ms**, p90 = 67,7 ms, mediana = 29,6 ms, máx. = 397 ms; **44,7 incidentes/s** | ✅ Cumple |
-| PR-02 | Consulta del mapa con 200 incidentes por respuesta, 50 usuarios (1 min) | p95 < 2000 ms | **p95 = 110,8 ms**, mediana = 28,9 ms, máx. = 707 ms; 47,2 consultas/s; 0 % de errores; todas devolvieron 200 puntos | ✅ Cumple |
+| PR-02 | Carga del mapa con 200 incidentes, 50 usuarios (1 min) | ≤ 4 s (RNF-REN-02) | **p95 = 110,8 ms**, mediana = 28,9 ms, máx. = 707 ms; 47,2 consultas/s; 0 % de errores; todas devolvieron 200 puntos | ✅ Cumple |
+| PR-03 | Tiempo de cálculo de la prioridad | ≤ 2 s (RNF-REN-03) | La prioridad se calcula dentro de la creación del reporte: p95 de la creación completa = 91,9 ms. Con Ubicaciones caído se asigna la base de inmediato y la definitiva llega con el recálculo (16–37 s tras su recuperación, PT-02) | ✅ Cumple |
 
 **Nota de método.** k6 corre en un contenedor **dentro de la red de Docker** y llama a
 `http://gateway:8080`. Una primera corrida desde fuera (`host.docker.internal`) dio 4,7 % y 2,7 % de
