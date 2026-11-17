@@ -109,6 +109,7 @@ salidas quedan en `evidencias/`. Resultados consolidados: [docs/RESULTADOS.md](d
 | Verificación por fase (usuario/gateway, clasificación, asignación) | `bash pruebas/fase2.sh` · `fase3.sh` · `fase4.sh` | 10 s · 1,5 min · 2 min |
 | Carga con k6 (PC-01, PR-01, PR-02) | `bash pruebas/k6/ejecutar.sh` | ~4 min |
 | Tolerancia a fallos PT-01 … PT-04 | `bash pruebas/fallos/pt01.sh` … `pt04.sh` | ~1 min c/u |
+| Datos de ejemplo para una demo (15 incidentes) | `bash scripts/seed_incidentes.sh` | ~5 s |
 
 > `fase2.sh` usa el límite de 10 logins/min: no repetirlo antes de un minuto.
 > En Postman: *Import* → `pruebas/postman/urbansync.postman_collection.json` → *Run collection*.
