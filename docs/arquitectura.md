@@ -101,6 +101,24 @@ sequenceDiagram
     Note over C: notificación local del sistema
 ```
 
+## Regla de prioridad (nivel de riesgo)
+
+| Paso | Dónde | Qué hace |
+|---|---|---|
+| Prioridad base | `db/init/02_incidentes.sql` (tabla `incidentes.categoria`) | infraestructura = baja, seguridad = media, desastre natural = alta |
+| Reportes similares | `servicios/ubicaciones/src/repositorios/ubicaciones.js` (`registrarYContar`) | Cuenta con `ST_DWithin` los reportes de la misma categoría a ≤ `RADIO_SIMILARES_M` (50 m) en 30 días, incluido el nuevo |
+| Regla | `servicios/clasificacion/src/servicios/prioridad.js` (`calcularPrioridad`) | 1 similar → base · 2 a 4 → sube un nivel · 5 o más → alta |
+| Respaldo | `servicios/clasificacion/src/servicios/incidentes.js` (`crear`) | Si Ubicaciones falla: prioridad base, origen `respaldo` y recálculo pendiente |
+| Recálculo | `servicios/clasificacion/src/servicios/recalculo.js` | Cada 60 s; nunca baja una prioridad fijada por el supervisor |
+| Ajuste manual | `PATCH /api/incidentes/:id/clasificacion` | El supervisor fija la prioridad (origen `supervisor`) |
+| Efecto | `servicios/notificacion/src/eventos/procesador.js` | Prioridad alta → aviso a todos los supervisores |
+
+| Categoría (base) | Similares a ≤ 50 m en 30 días | Prioridad |
+|---|---|---|
+| Infraestructura (baja) | 1 / 2–4 / 5 o más | Baja / Media / Alta |
+| Seguridad (media) | 1 / 2 o más | Media / Alta |
+| Desastre natural (alta) | cualquiera | Alta |
+
 ## Patrones de sistemas distribuidos aplicados
 
 | Patrón | Dónde | Para qué |
